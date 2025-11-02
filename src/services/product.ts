@@ -1,0 +1,128 @@
+import { API } from "@/utils/api";
+
+const getAll = async () => {
+  try {
+    const response = await fetch(API.GET_ALL_PRODUCTS, {
+      method: "GET",
+    });
+    if (!response.ok) {
+      throw new Error(`Failed - Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error: any) {
+    console.error("========= Error Get All Products:", error);
+    return false;
+  }
+};
+
+const getAllWithDeleted = async () => {
+  try {
+    const response = await fetch(API.GET_ALL_PRODUCTS_W_DELETED, {
+      method: "GET",
+    });
+    if (!response.ok) {
+      throw new Error(`Failed - Status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error: any) {
+    console.error("========= Error Get All Products:", error);
+    return false;
+  }
+};
+
+const createProduct = async (payload: any) => {
+  try {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    const response = await fetch(API.CREATE_PRODUCT, {
+      method: "POST",
+      headers: myHeaders,
+      body: JSON.stringify(payload),
+      redirect: "follow",
+    });
+    if (!response.ok) {
+      throw new Error(`Failed - Status: ${response.status}`);
+    }
+    return true;
+  } catch (error: any) {
+    console.error("========= Error Create Product:", error);
+    return false;
+  }
+};
+
+const updateProduct = async (id: any, payload: any) => {
+  try {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const response = await fetch(`${API.UPDATE_PRODUCT}/${id}`, {
+      method: "PUT",
+      headers: myHeaders,
+      body: JSON.stringify(payload),
+      redirect: "follow",
+    });
+    if (!response.ok) {
+      console.log("check update: failed", response.status);
+
+      throw new Error(`Failed - Status: ${response.status}`);
+    }
+    console.log("check update: success", response.status);
+    return true;
+  } catch (error: any) {
+    console.error("========= Error Update Product:", error);
+    return false;
+  }
+};
+
+const deleteProduct = async (id: any) => {
+  try {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    const response = await fetch(`${API.DELETE_PRODUCT}/${id}`, {
+      method: "DELETE",
+      headers: myHeaders,
+      redirect: "follow",
+      body: JSON.stringify({}),
+    });
+    if (!response.ok) {
+      throw new Error(`Failed - Status: ${response.status}`);
+    }
+    return true;
+  } catch (error: any) {
+    console.error("========= Error Delete Product:", error);
+    return false;
+  }
+};
+
+const getProductById = async (id: string) => {
+  try {
+    const response = await fetch(`${API.GET_PRODUCT}/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Login failed - Status: ${response.status}`);
+      throw new Error(`Get Product Failed - Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("========= Error Get product:", error);
+    throw error;
+  }
+};
+
+export const ProductService = {
+  getAll,
+  getAllWithDeleted,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  getProductById,
+};
